@@ -32,6 +32,10 @@ int main(int argc, char *argv[])
     rdata = curl_easy_escape(curl, argv[1], len);
     len += strlen(rdata) + 512;
     urldata = (char *)calloc(len, sizeof(char));
+    if (urldata == NULL) {
+        fprintf(stderr, "memory allocation error");
+        return 1;
+    }
     strcpy(urldata, URL);
     strcat(urldata, rdata);
     strcat(urldata, "\"");
