@@ -15,12 +15,12 @@ int main(int argc, char *argv[])
     CURL *curl = curl_easy_init();    
     
     if (argc != 2) {
-        fprintf(stderr, "Usage: %s \"text\"\n", argv[0]);
+        printf("Usage: %s \"text\"\n", argv[0]);
         return 1;
     }    
 
     if (!curl) {
-        puts("curl error");    
+        fprintf(stderr, "curl error");    
         return 1;
     }
 
