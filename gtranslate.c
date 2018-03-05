@@ -11,14 +11,13 @@ char * print_data(char *p);
 size_t write_data(char *data, size_t size, size_t nmemb);
 
 int main(int argc, char *argv[])
-{
-    CURL *curl = curl_easy_init();    
-    
+{        
     if (argc != 2) {
         printf("Usage: %s \"text\"\n", argv[0]);
         return 1;
     }    
 
+    CURL *curl = curl_easy_init();    
     if (!curl) {
         fprintf(stderr, "curl error");    
         return 1;
@@ -34,6 +33,7 @@ int main(int argc, char *argv[])
     urldata = (char *)calloc(len, sizeof(char));
     if (urldata == NULL) {
         fprintf(stderr, "memory allocation error");
+        curl_easy_cleanup(curl);
         return 1;
     }
     strcpy(urldata, URL);
