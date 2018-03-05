@@ -3,11 +3,11 @@
 #include <string.h>
 #include <curl/curl.h>
 
-#define UA "Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0"
+#define UA "Mozilla/5.0"
 
 #define URL "http://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ru&dt=t&q=\""
 
-char * printData(char *p);
+char * print_data(char *p);
 size_t write_data(char *data, size_t size, size_t nmemb);
 
 int main(int argc, char *argv[])
@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     CURL *curl = curl_easy_init();    
     
     if (argc != 2) {
-        printf("Usage: %s \"text\"\n", argv[0]);
+        fprintf(stderr, "Usage: %s \"text\"\n", argv[0]);
         return 1;
     }    
 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
     res = curl_easy_perform(curl);
     if (res != CURLE_OK)
-        printf("Response error");
+        fprintf(stderr, "Response error");
     curl_easy_cleanup(curl);
     free(urldata);
 
@@ -55,13 +55,13 @@ size_t write_data(char *data, size_t size, size_t nmemb)
     if (*p == '\\' && *(p + 1) == '\"')
         p += 2;
 
-    p = printData(p);
+    p = print_data(p);
     
     while (*p) {
         if (*p == ']' && *(p + 1) == ',' && *(p + 2) == '['
             && *(p + 4) != 'e' && *(p + 5) != 'n') {
             p += 4;
-            p = printData(p);
+            p = print_data(p);
         }
         ++p;
     }
@@ -71,7 +71,7 @@ size_t write_data(char *data, size_t size, size_t nmemb)
     return  size * nmemb;
 }
 
-char * printData(char *p)
+char * print_data(char *p)
 {
     while (*p) {
         if (*p == '\\' && *(p + 1) == '\"' && *(p + 2) == '\"'
