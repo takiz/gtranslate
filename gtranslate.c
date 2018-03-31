@@ -5,13 +5,12 @@
 
 #define UA "Mozilla/5.0"
 
-#define URL "http://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ru&dt=t&q=\""
+#define URL "http://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ru&dt=t&q=\""
 
-char * print_data(char *p);
 size_t write_data(char *data, size_t size, size_t nmemb);
 
 int main(int argc, char *argv[])
-{        
+{    
     if (argc != 2) {
         printf("Usage: %s \"text\"\n", argv[0]);
         return 1;
@@ -55,36 +54,29 @@ int main(int argc, char *argv[])
 size_t write_data(char *data, size_t size, size_t nmemb)
 {
     char *p = data + 4;
+    char *start, *t;
     
     if (*p == '\\' && *(p + 1) == '\"')
         p += 2;
 
-    p = print_data(p);
-    
+    start = p;
     while (*p) {
-        if (*p == ']' && *(p + 1) == ',' && *(p + 2) == '['
-            && *(p + 4) != 'e' && *(p + 5) != 'n') {
-            p += 4;
-            p = print_data(p);
+        if ((t = strstr(p, "\",\"")) != NULL) {
+            
+            if (*(t - 2) == '\\' && *(t - 1) == '\"')
+                p = t - 2;
+            else
+                p = t;
+            printf("%.*s", p - start, start);
         }
+        
+        if ((t = strstr(p, "],[\"")) != NULL)
+            start = p = t + 4;
+        
         ++p;
     }
-    
+        
     putchar('\n');
     
     return  size * nmemb;
-}
-
-char * print_data(char *p)
-{
-    while (*p) {
-        if (*p == '\\' && *(p + 1) == '\"' && *(p + 2) == '\"'
-            && *(p + 3) == ',')
-            break;
-        else if (*p == '\"' && *(p + 1) == ',' && *(p + 2) == '\"')
-           break;
-       putchar(*p++);
-    }
-
-    return p;
 }
