@@ -1,2 +1,6 @@
 # gtranslate
-English-Russian translate the text using Google Translate.
+Translates the text from any language to Russian using Google Translate.
+
+## Usage  
+```gtranslate "text"```  
+
