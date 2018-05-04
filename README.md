@@ -1,5 +1,5 @@
 # gtranslate
-Translates the text from any language to Russian using Google Translate.
+Переводит текст с любого языка на русский, используя Google Translate.
 
 ## Usage  
 ```gtranslate "text"```  
